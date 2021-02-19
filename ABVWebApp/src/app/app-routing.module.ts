@@ -7,48 +7,48 @@ import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+    { path: 'home', component: HomeComponent },
 
-  {
-    path: 'auth',
-    loadChildren: () =>
-      import('./pages/authentication/authentication.module').then(
-        (m) => m.AuthenticationModule
-      ),
-  },
-  {
-    path: 'upload-balances',
-    loadChildren: () =>
-      import('./pages/upload-balances/upload-balances.module').then(
-        (m) => m.UploadBalancesModule
-      ),
-    canActivate: [AdminGuard],
-  },
-  {
-    path: 'account-balances',
-    loadChildren: () =>
-      import('./pages/account-balances/account-balances.module').then(
-        (m) => m.AccountBalancesModule
-      ),
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'account-reports',
-    loadChildren: () =>
-      import('./pages/account-reports/account-reports.module').then(
-        (m) => m.AccountReportsModule
-      ),
-    canActivate: [AdminGuard],
-  },
-  { path: 'forbidden', component: ForbiddenComponent },
-  { path: '404', component: NotFoundComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/404', pathMatch: 'full' },
+    {
+        path: 'auth',
+        loadChildren: () =>
+            import('./pages/authentication/authentication.module').then(
+                (m) => m.AuthenticationModule
+            ),
+    },
+    {
+        path: 'upload-balances',
+        loadChildren: () =>
+            import('./pages/upload-balances/upload-balances.module').then(
+                (m) => m.UploadBalancesModule
+            ),
+        canLoad: [AdminGuard],
+    },
+    {
+        path: 'account-balances',
+        loadChildren: () =>
+            import('./pages/account-balances/account-balances.module').then(
+                (m) => m.AccountBalancesModule
+            ),
+        canLoad: [AuthGuard],
+    },
+    {
+        path: 'account-reports',
+        loadChildren: () =>
+            import('./pages/account-reports/account-reports.module').then(
+                (m) => m.AccountReportsModule
+            ),
+        canLoad: [AdminGuard],
+    },
+    { path: 'forbidden', component: ForbiddenComponent },
+    { path: '404', component: NotFoundComponent },
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: '**', redirectTo: '/404', pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  providers: [],
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
+    providers: [],
 })
 export class AppRoutingModule {}

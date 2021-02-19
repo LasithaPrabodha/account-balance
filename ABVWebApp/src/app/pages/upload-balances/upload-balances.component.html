@@ -1,69 +1,62 @@
-<div class="row mt-4">
-  <div class="col-12">
-    <h2>Upload Balances</h2>
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="mb-4">Upload Balances</h2>
 
-    <div *ngIf="showError" class="alert alert-danger" role="alert">
-      {{ errorMessage }}
+        <div
+            *ngIf="showError || showSuccess"
+            class="alert"
+            [ngClass]="{ 'alert-danger': showError, 'alert-success': showSuccess }"
+            role="alert"
+        >
+            {{ responseMessage }}
+        </div>
+
+        <form [formGroup]="uploadForm" autocomplete="off" novalidate (ngSubmit)="submitForm()">
+            <div class="form-group row">
+                <label for="yearMonth" class="col-form-label col-sm-2">Year & Month:</label>
+                <div class="col-md-5">
+                    <input
+                        type="text"
+                        id="yearMonth"
+                        formControlName="yearMonth"
+                        autocomplete="off"
+                        class="form-control date"
+                        readonly
+                        name="yearMonth"
+                        bsDatepicker
+                        [bsConfig]="bsConfig"
+                        (onShown)="onOpenCalendar($event)"
+                    />
+                </div>
+                <div class="col-md-5">
+                    <em *ngIf="validateControl('yearMonth') && hasError('yearMonth', 'required')">
+                        This is required
+                    </em>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="filebutton">Account Balances:</label>
+                <div class="col-md-5">
+                    <input
+                        id="filebutton"
+                        name="filebutton"
+                        formControlName="file"
+                        class="input-file"
+                        type="file"
+                        accept=".csv"
+                        #fileInput
+                    />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-1 offset-2">
+                    <button type="submit" class="btn btn-info" [disabled]="!uploadForm.valid">
+                        Upload
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
-
-    <form
-      [formGroup]="uploadForm"
-      autocomplete="off"
-      novalidate
-      (ngSubmit)="submitForm()"
-    >
-      <div class="form-group row">
-        <label for="username" class="col-form-label col-sm-2">Year:</label>
-        <div class="col-md-5">
-          <input
-            type="text"
-            id="username"
-            formControlName="year"
-            class="form-control"
-          />
-        </div>
-        <div class="col-md-5">
-          <em
-            *ngIf="
-              validateControl('username') && hasError('username', 'required')
-            "
-          >
-            Username is required
-          </em>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="password" class="col-form-label col-sm-2">Password:</label>
-        <div class="col-md-5">
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            class="form-control"
-          />
-        </div>
-        <div class="col-md-5">
-          <em
-            *ngIf="
-              validateControl('password') && hasError('password', 'required')
-            "
-          >
-            Password is required
-          </em>
-        </div>
-      </div>
-      <br />
-      <div class="form-group row">
-        <div class="col-md-1">
-          <button
-            type="submit"
-            class="btn btn-info"
-            [disabled]="!loginForm.valid"
-          >
-            Login
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
 </div>

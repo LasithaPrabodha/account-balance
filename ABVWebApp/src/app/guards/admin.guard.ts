@@ -1,28 +1,17 @@
 import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { Router, CanLoad, Route, UrlSegment } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable({ providedIn: 'root' })
-export class AdminGuard implements CanActivate {
-  constructor(
-    private authService: AuthenticationService,
-    private router: Router
-  ) {}
+export class AdminGuard implements CanLoad {
+    constructor(private authService: AuthenticationService, private router: Router) {}
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    if (this.authService.isUserAdmin) return true;
+    canLoad(route: Route, segments: UrlSegment[]): boolean {
+        if (this.authService.isUserAdmin && this.authService.isUserAuthenticated) return true;
 
-    this.router.navigate(['/forbidden'], {
-      queryParams: { returnUrl: state.url },
-    });
-    return false;
-  }
+        this.router.navigate(['/forbidden'], {
+            queryParams: { returnUrl: route.path },
+        });
+        return false;
+    }
 }

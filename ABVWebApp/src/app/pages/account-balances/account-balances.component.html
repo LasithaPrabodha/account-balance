@@ -1,1 +1,13 @@
-<p>account-balances works!</p>
+<div class="row">
+    <div class="col-12">
+        <h5 class="pt-4 text-secondary text-center" *ngIf="isLoading">Loading...</h5>
+    </div>
+    <div class="col-sm-4 pt-4" *ngFor="let account of accounts$ | async">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ account.accountName }}</h5>
+                <h1>Rs. {{ account.balance | number: '1.2-2' }}</h1>
+            </div>
+        </div>
+    </div>
+</div>

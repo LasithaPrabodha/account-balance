@@ -8,40 +8,39 @@ import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
-import { ErrorHandlerService } from './services/error-handler.service';
-import { MenuComponent } from './components/menu/menu.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { ComponentsModule } from './components/components.module';
+import { environment } from 'src/environments/environment';
 
 function tokenGetter(): string {
-  return localStorage.getItem('token');
+    return localStorage.getItem('accessToken');
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    NotFoundComponent,
-    ForbiddenComponent,
-    MenuComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter,
-        allowedDomains: ['localhost:5000'],
-        disallowedRoutes: [],
-      },
-    }),
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlerService,
-      multi: true,
-    },
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent, HomeComponent, NotFoundComponent, ForbiddenComponent],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        ComponentsModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter,
+                allowedDomains: ['localhost:5000'],
+                disallowedRoutes: [/(registration|login)$/gm],
+            },
+        }),
+    ],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: JwtInterceptor,
+            multi: true,
+        },
+        { provide: 'BASE_API_URL', useValue: environment.urlAddress },
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

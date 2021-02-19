@@ -1,78 +1,68 @@
 import { UserForAuthentication } from '../../../interfaces/user/IUserForAuthentication';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../../../services/authentication.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from 'src/app/shared/base-component';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  private returnUrl: string;
-  private onDestroy$: Subject<void> = new Subject<void>();
-  loginForm: FormGroup;
-  errorMessage = '';
-  showError: boolean;
+export class LoginComponent extends BaseComponent implements OnInit {
+    private returnUrl: string;
+    errorMessage = '';
+    showError: boolean;
+    isLoading = false;
 
-  constructor(
-    private authService: AuthenticationService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void {
-    this.loginForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-    });
-
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
-  }
-
-  ngOnDestroy(): void {
-    this.onDestroy$.next();
-  }
-
-  validateControl(controlName: string): boolean {
-    return (
-      this.loginForm.controls[controlName].invalid &&
-      this.loginForm.controls[controlName].touched
-    );
-  }
-
-  hasError(controlName: string, errorName: string): boolean {
-    return this.loginForm.controls[controlName].hasError(errorName);
-  }
-
-  loginUser(): void {
-    if (this.loginForm.valid) {
-      this.showError = false;
-      const login = { ...this.loginForm.value };
-      const userForAuth: UserForAuthentication = {
-        email: login.username,
-        password: login.password,
-      };
-
-      this.authService
-        .loginUser(userForAuth)
-        .pipe(takeUntil(this.onDestroy$))
-        .subscribe(
-          (res) => {
-            localStorage.setItem('token', res.token);
-            this.authService.sendAuthStateChangeNotification(
-              res.isAuthSuccessful
-            );
-            this.router.navigate([this.returnUrl]);
-          },
-          (error) => {
-            this.errorMessage = error;
-            this.showError = true;
-          }
-        );
+    constructor(
+        private authService: AuthenticationService,
+        private router: Router,
+        private route: ActivatedRoute
+    ) {
+        super();
     }
-  }
+
+    get loginForm() {
+        return this.form;
+    }
+
+    ngOnInit(): void {
+        this.form = new FormGroup({
+            email: new FormControl('', [Validators.required, Validators.email]),
+            password: new FormControl('', [Validators.required]),
+        });
+
+        this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
+    }
+
+    loginUser(): void {
+        if (this.form.valid) {
+            this.isLoading = true;
+            this.showError = false;
+            const login = { ...this.form.value };
+            const userForAuth: UserForAuthentication = {
+                email: login.email,
+                password: login.password,
+            };
+
+            this.authService
+                .loginUser(userForAuth)
+                .pipe(takeUntil(this.onDestroy$))
+                .subscribe(
+                    (res) => {
+                        this.authService.sendAuthStateChangeNotification(res.isAuthSuccessful);
+                        res.isAuthSuccessful && this.router.navigate([this.returnUrl]);
+                        this.isLoading = false;
+                    },
+                    (error) => {
+                        this.errorMessage = error;
+                        this.showError = true;
+                        this.isLoading = false;
+                    }
+                );
+        }
+    }
 }

@@ -1,0 +1,19 @@
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">{{ accountName }}</h5>
+        <div class="d-block">
+            <canvas
+                baseChart
+                width="1100"
+                height="500"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="false"
+                chartType="line"
+            >
+            </canvas>
+        </div>
+    </div>
+</div>
