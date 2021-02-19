@@ -2,6 +2,11 @@
 
 namespace Entities.DTOs
 {
+    public enum Roles
+    {
+        Viewer, Administrator
+    }
+
     public class UserForRegistrationDto
     {
         public string FirstName { get; set; }
@@ -16,5 +21,8 @@ namespace Entities.DTOs
 
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Password is required")]
+        public Roles Role { get; set; }
     }
 }

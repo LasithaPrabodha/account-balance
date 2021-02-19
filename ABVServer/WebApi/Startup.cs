@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using Contracts;
 using Entities;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,7 +34,10 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.ConfigureCors();
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+            }));
             services.ConfigureIISIntegration();
 
             services.ConfigureLoggerService();
@@ -65,11 +69,12 @@ namespace WebApi
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
                     ValidAudience = jwtSettings.GetSection("validAudience").Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSection("securityKey").Value))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetSection("securityKey").Value)),
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
-            services.AddScoped<JwtHandler>();
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddControllers().AddNewtonsoftJson(options => 
             {
@@ -98,8 +103,8 @@ namespace WebApi
 
             app.UseHttpsRedirection();
 
-            app.UseCors("CorsPolicy");
-           
+            app.UseCors("ApiCorsPolicy");
+
             app.UseRouting();
 
             app.UseAuthentication();

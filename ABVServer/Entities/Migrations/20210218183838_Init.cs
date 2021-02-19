@@ -194,6 +194,29 @@ namespace Entities.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Token = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    Expires = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Revoked = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => new { x.UserId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "AccountId", "AccountName" },
@@ -211,8 +234,8 @@ namespace Entities.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "d0d706e6-f78a-4fae-a16a-3c22ffc359c3", "a169c9ff-9ee4-49fc-b38a-d3435d3edd67", "Viewer", "VIEWER" },
-                    { "8730de4e-4e65-4276-bbea-b512ea6afb74", "7fb03f80-f8a9-4ce8-b9bb-a0788b81e4b2", "Administrator", "ADMINISTRATOR" }
+                    { "f7cdc9a6-78b2-43c8-ae28-c72943910735", "baa24cce-b615-4f76-8b28-9cd5e837b106", "Viewer", "VIEWER" },
+                    { "d4c5f0e1-82b2-4a13-bf58-81bb0dc8b06f", "f6138fce-694b-49cd-8e93-d53486fc0efa", "Administrator", "ADMINISTRATOR" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -274,6 +297,9 @@ namespace Entities.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
                 name: "Transactions");

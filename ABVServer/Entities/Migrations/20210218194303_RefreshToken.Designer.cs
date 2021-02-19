@@ -3,14 +3,16 @@ using System;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20210218194303_RefreshToken")]
+    partial class RefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace Entities.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
-                    b.Property<double>("Balance")
-                        .HasColumnType("double");
-
                     b.Property<DateTime>("DateCreated")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -46,36 +45,31 @@ namespace Entities.Migrations
                         {
                             Id = 1,
                             AccountName = "Rnd",
-                            Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(8523)
+                            DateCreated = new DateTime(2021, 2, 19, 1, 13, 2, 688, DateTimeKind.Local).AddTicks(8351)
                         },
                         new
                         {
                             Id = 2,
                             AccountName = "Canteen",
-                            Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9360)
+                            DateCreated = new DateTime(2021, 2, 19, 1, 13, 2, 688, DateTimeKind.Local).AddTicks(8973)
                         },
                         new
                         {
                             Id = 3,
                             AccountName = "CEO's Car",
-                            Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9366)
+                            DateCreated = new DateTime(2021, 2, 19, 1, 13, 2, 688, DateTimeKind.Local).AddTicks(8980)
                         },
                         new
                         {
                             Id = 4,
                             AccountName = "Marketing",
-                            Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9367)
+                            DateCreated = new DateTime(2021, 2, 19, 1, 13, 2, 688, DateTimeKind.Local).AddTicks(8981)
                         },
                         new
                         {
                             Id = 5,
                             AccountName = "Parking Fines",
-                            Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9368)
+                            DateCreated = new DateTime(2021, 2, 19, 1, 13, 2, 688, DateTimeKind.Local).AddTicks(8983)
                         });
                 });
 
@@ -214,15 +208,15 @@ namespace Entities.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b893e6a-e11c-4136-9976-643d8f21d97c",
-                            ConcurrencyStamp = "f3aa9441-4297-40f4-9d8a-18c08d79975f",
+                            Id = "2c1344d4-d439-4a10-b153-5ce5086f2729",
+                            ConcurrencyStamp = "4c5aaff2-e04f-483a-ac16-184599ae48ed",
                             Name = "Viewer",
                             NormalizedName = "VIEWER"
                         },
                         new
                         {
-                            Id = "26fe728a-b1dc-4f12-a673-e8b607594943",
-                            ConcurrencyStamp = "3b66ef9e-b3ab-49e2-9ca8-014ad60990b5",
+                            Id = "dd135355-7a38-4d11-9b33-d10e395bcca4",
+                            ConcurrencyStamp = "5a011134-e0b9-405d-9fe1-e4e6ee1be115",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

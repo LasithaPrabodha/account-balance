@@ -24,6 +24,9 @@ namespace Entities.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
         public DateTime DateCreated { get; set; }
 
+        [Display(Name = "Account Balance")]
+        public double Balance { get; set; }
+
         public virtual ICollection<Transaction> Transactions { get; set; }
 
 

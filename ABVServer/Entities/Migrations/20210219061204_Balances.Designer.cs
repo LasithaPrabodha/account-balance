@@ -3,14 +3,16 @@ using System;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20210219061204_Balances")]
+    partial class Balances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,35 +49,35 @@ namespace Entities.Migrations
                             Id = 1,
                             AccountName = "Rnd",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(8523)
+                            DateCreated = new DateTime(2021, 2, 19, 11, 42, 4, 72, DateTimeKind.Local).AddTicks(8125)
                         },
                         new
                         {
                             Id = 2,
                             AccountName = "Canteen",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9360)
+                            DateCreated = new DateTime(2021, 2, 19, 11, 42, 4, 72, DateTimeKind.Local).AddTicks(9260)
                         },
                         new
                         {
                             Id = 3,
                             AccountName = "CEO's Car",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9366)
+                            DateCreated = new DateTime(2021, 2, 19, 11, 42, 4, 72, DateTimeKind.Local).AddTicks(9267)
                         },
                         new
                         {
                             Id = 4,
                             AccountName = "Marketing",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9367)
+                            DateCreated = new DateTime(2021, 2, 19, 11, 42, 4, 72, DateTimeKind.Local).AddTicks(9269)
                         },
                         new
                         {
                             Id = 5,
                             AccountName = "Parking Fines",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9368)
+                            DateCreated = new DateTime(2021, 2, 19, 11, 42, 4, 72, DateTimeKind.Local).AddTicks(9271)
                         });
                 });
 
@@ -214,15 +216,15 @@ namespace Entities.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b893e6a-e11c-4136-9976-643d8f21d97c",
-                            ConcurrencyStamp = "f3aa9441-4297-40f4-9d8a-18c08d79975f",
+                            Id = "061184c4-e5e3-42cd-a939-3db03ce10c6a",
+                            ConcurrencyStamp = "c8bd3277-9d3f-412f-8b7c-07044f30d285",
                             Name = "Viewer",
                             NormalizedName = "VIEWER"
                         },
                         new
                         {
-                            Id = "26fe728a-b1dc-4f12-a673-e8b607594943",
-                            ConcurrencyStamp = "3b66ef9e-b3ab-49e2-9ca8-014ad60990b5",
+                            Id = "7e982de6-06fc-4a76-a939-a19d32549088",
+                            ConcurrencyStamp = "07ef2d60-9120-4da6-8ad8-3c1ab42cddab",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

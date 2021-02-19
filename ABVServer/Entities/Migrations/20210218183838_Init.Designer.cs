@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20210217185324_Init")]
+    [Migration("20210218183838_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,31 +45,31 @@ namespace Entities.Migrations
                         {
                             Id = 1,
                             AccountName = "Rnd",
-                            DateCreated = new DateTime(2021, 2, 18, 0, 23, 23, 671, DateTimeKind.Local).AddTicks(5483)
+                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(2445)
                         },
                         new
                         {
                             Id = 2,
                             AccountName = "Canteen",
-                            DateCreated = new DateTime(2021, 2, 18, 0, 23, 23, 671, DateTimeKind.Local).AddTicks(5965)
+                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3005)
                         },
                         new
                         {
                             Id = 3,
                             AccountName = "CEO's Car",
-                            DateCreated = new DateTime(2021, 2, 18, 0, 23, 23, 671, DateTimeKind.Local).AddTicks(5969)
+                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3011)
                         },
                         new
                         {
                             Id = 4,
                             AccountName = "Marketing",
-                            DateCreated = new DateTime(2021, 2, 18, 0, 23, 23, 671, DateTimeKind.Local).AddTicks(5970)
+                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3012)
                         },
                         new
                         {
                             Id = 5,
                             AccountName = "Parking Fines",
-                            DateCreated = new DateTime(2021, 2, 18, 0, 23, 23, 671, DateTimeKind.Local).AddTicks(5971)
+                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3014)
                         });
                 });
 
@@ -202,15 +202,15 @@ namespace Entities.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d0d706e6-f78a-4fae-a16a-3c22ffc359c3",
-                            ConcurrencyStamp = "a169c9ff-9ee4-49fc-b38a-d3435d3edd67",
+                            Id = "f7cdc9a6-78b2-43c8-ae28-c72943910735",
+                            ConcurrencyStamp = "baa24cce-b615-4f76-8b28-9cd5e837b106",
                             Name = "Viewer",
                             NormalizedName = "VIEWER"
                         },
                         new
                         {
-                            Id = "8730de4e-4e65-4276-bbea-b512ea6afb74",
-                            ConcurrencyStamp = "7fb03f80-f8a9-4ce8-b9bb-a0788b81e4b2",
+                            Id = "d4c5f0e1-82b2-4a13-bf58-81bb0dc8b06f",
+                            ConcurrencyStamp = "f6138fce-694b-49cd-8e93-d53486fc0efa",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -327,6 +327,40 @@ namespace Entities.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("Entities.Models.User", b =>
+                {
+                    b.OwnsMany("Entities.Models.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("UserId")
+                                .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            b1.Property<DateTime>("Created")
+                                .HasColumnType("datetime(6)");
+
+                            b1.Property<DateTime>("Expires")
+                                .HasColumnType("datetime(6)");
+
+                            b1.Property<DateTime?>("Revoked")
+                                .HasColumnType("datetime(6)");
+
+                            b1.Property<string>("Token")
+                                .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                            b1.HasKey("UserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -12,14 +12,14 @@ namespace WebApi.Controllers
 {
     [Authorize(Roles = "Administrator")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/transaction")]
     [Produces("application/json")]
     public class TransactionController : ControllerBase
     {
 
-        private ILoggerManager _logger;
-        private IRepositoryWrapper _repository;
-        private IMapper _mapper;
+        private readonly ILoggerManager _logger;
+        private readonly IRepositoryWrapper _repository;
+        private readonly IMapper _mapper;
 
         public TransactionController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
         {
@@ -56,7 +56,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(500, new { error = e.Message });
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -78,7 +78,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(500, new { error = e.Message });
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -97,7 +97,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(500, new { error = e.Message });
+                return StatusCode(500, new { message = e.Message });
             }
         }
 
@@ -118,7 +118,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(500, new { error = e.Message });
+                return StatusCode(500, new { message = e.Message });
             }
         }
 

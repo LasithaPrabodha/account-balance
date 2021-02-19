@@ -4,6 +4,7 @@ namespace Contracts
     {
         IAccountRepository Account { get; }
         ITransactionRepository Transaction { get; }
+        IUserRepository User { get; }
         void Save();
     }
 }

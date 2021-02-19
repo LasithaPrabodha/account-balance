@@ -8,6 +8,7 @@ namespace Repository
         private RepositoryContext _repoContext;
         private ITransactionRepository _transaction;
         private IAccountRepository _account;
+        private IUserRepository _user;
         public RepositoryWrapper(RepositoryContext repositoryContext)
         {
             _repoContext = repositoryContext;
@@ -36,6 +37,19 @@ namespace Repository
                 }
 
                 return _transaction;
+            }
+        }
+
+        public IUserRepository User
+        {
+            get
+            {
+                if (_user == null)
+                {
+                    _user = new UserRepository(_repoContext);
+                }
+
+                return _user;
             }
         }
 
