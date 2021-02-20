@@ -21,10 +21,7 @@ namespace Entities.Models
         public double Amount { get; set; }
 
         [Required(ErrorMessage = "{0} is required")]
-        public int Year { get; set; }
-
-        [Required(ErrorMessage = "{0} is required")]
-        public int Month { get; set; }
+        public DateTime TransactionDate { get; set; }
 
         [ForeignKey("Account")]
         public int AccountId { get; set; }

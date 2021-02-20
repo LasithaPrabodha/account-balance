@@ -4,9 +4,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -57,8 +55,8 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                this._logger.LogError(e.Message);
-                return StatusCode(500, new { message = e.Message });
+                _logger.LogError(e.Message);
+                return StatusCode(500, new Error { Message = e.Message });
             }
         }
     }

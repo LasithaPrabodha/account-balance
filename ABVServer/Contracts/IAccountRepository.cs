@@ -1,10 +1,11 @@
 using Entities.Models;
+using System.Threading.Tasks;
 
 namespace Contracts
 {
     public interface IAccountRepository : IRepositoryBase<Account>
     {
-        Account GetAccountById(int accountId);
-        Account GetAccountWithDetails(int accountId);
+        Task<Account> GetAccountById(int accountId);
+        Task<Account> GetAccountWithDetails(int accountId);
     }
 }

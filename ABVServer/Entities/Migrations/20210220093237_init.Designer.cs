@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20210218183838_Init")]
-    partial class Init
+    [Migration("20210220093237_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,9 @@ namespace Entities.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
+                    b.Property<double>("Balance")
+                        .HasColumnType("double");
+
                     b.Property<DateTime>("DateCreated")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -45,31 +48,36 @@ namespace Entities.Migrations
                         {
                             Id = 1,
                             AccountName = "Rnd",
-                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(2445)
+                            Balance = 0.0,
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(3353)
                         },
                         new
                         {
                             Id = 2,
                             AccountName = "Canteen",
-                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3005)
+                            Balance = 0.0,
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4160)
                         },
                         new
                         {
                             Id = 3,
                             AccountName = "CEO's Car",
-                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3011)
+                            Balance = 0.0,
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4165)
                         },
                         new
                         {
                             Id = 4,
                             AccountName = "Marketing",
-                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3012)
+                            Balance = 0.0,
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4166)
                         },
                         new
                         {
                             Id = 5,
                             AccountName = "Parking Fines",
-                            DateCreated = new DateTime(2021, 2, 19, 0, 8, 38, 361, DateTimeKind.Local).AddTicks(3014)
+                            Balance = 0.0,
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4168)
                         });
                 });
 
@@ -91,11 +99,8 @@ namespace Entities.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("double");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -152,6 +157,12 @@ namespace Entities.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -202,15 +213,15 @@ namespace Entities.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f7cdc9a6-78b2-43c8-ae28-c72943910735",
-                            ConcurrencyStamp = "baa24cce-b615-4f76-8b28-9cd5e837b106",
+                            Id = "9dd229f4-3d84-4bb9-89b7-01a18f46e688",
+                            ConcurrencyStamp = "188b4924-abf2-46af-a01a-b17a7c33a2c0",
                             Name = "Viewer",
                             NormalizedName = "VIEWER"
                         },
                         new
                         {
-                            Id = "d4c5f0e1-82b2-4a13-bf58-81bb0dc8b06f",
-                            ConcurrencyStamp = "f6138fce-694b-49cd-8e93-d53486fc0efa",
+                            Id = "21fbcf8e-a350-42d4-91ff-779cd169a86e",
+                            ConcurrencyStamp = "f2b82de5-880e-4285-b936-5a9f0bd12241",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -327,40 +338,6 @@ namespace Entities.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("Entities.Models.User", b =>
-                {
-                    b.OwnsMany("Entities.Models.RefreshToken", "RefreshTokens", b1 =>
-                        {
-                            b1.Property<string>("UserId")
-                                .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            b1.Property<DateTime>("Created")
-                                .HasColumnType("datetime(6)");
-
-                            b1.Property<DateTime>("Expires")
-                                .HasColumnType("datetime(6)");
-
-                            b1.Property<DateTime?>("Revoked")
-                                .HasColumnType("datetime(6)");
-
-                            b1.Property<string>("Token")
-                                .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                            b1.HasKey("UserId", "Id");
-
-                            b1.ToTable("RefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
-                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

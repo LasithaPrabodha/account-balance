@@ -16,7 +16,7 @@ namespace Repository
             RepositoryContext = repositoryContext;
         }
 
-        public IEnumerable<T> FindAll()
+        public IQueryable<T> FindAll()
         {
             return RepositoryContext.Set<T>().AsNoTracking();
         }

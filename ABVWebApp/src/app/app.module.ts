@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
-import { NotFoundComponent } from './pages/error-pages/not-found/not-found.component';
-import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
+import { NotFoundComponent } from './pages/redirects/not-found/not-found.component';
+import { ForbiddenComponent } from './pages/redirects/forbidden/forbidden.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';

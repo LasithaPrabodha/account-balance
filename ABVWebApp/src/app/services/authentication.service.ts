@@ -79,7 +79,13 @@ export class AuthenticationService {
         const token = localStorage.getItem('accessToken');
         const decodedToken = this.jwtHelper.decodeToken(token);
         const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
+        console.log(role);
         return role === 'Administrator';
+    }
+
+    get username(): string {
+        const token = localStorage.getItem('accessToken');
+        const decodedToken = this.jwtHelper.decodeToken(token);
+        return decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
     }
 }

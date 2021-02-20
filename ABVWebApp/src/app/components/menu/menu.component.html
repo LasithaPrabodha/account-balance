@@ -53,6 +53,7 @@
                     </a>
                 </li>
             </ul>
+            <span class="text-white text-bold mr-4">Hello {{ username }}</span>
             <div class="form-inline my-2 my-lg-0">
                 <ng-container *ngIf="isUserAuthenticated$ | async; else notAuth">
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">

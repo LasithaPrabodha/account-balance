@@ -13,7 +13,7 @@ import { BaseComponent } from 'src/app/shared/base-component';
     styleUrls: ['./register-user.component.css'],
 })
 export class RegisterUserComponent extends BaseComponent implements OnInit {
-    errorMessage = '';
+    errorMessages = '';
     showError: boolean;
 
     constructor(
@@ -68,7 +68,9 @@ export class RegisterUserComponent extends BaseComponent implements OnInit {
                         this.router.navigate(['/auth/login']);
                     },
                     (error) => {
-                        this.errorMessage = error;
+                        this.errorMessages = !error.isSuccessfulRegistration
+                            ? error.errors
+                            : [error.message];
                         this.showError = true;
                     }
                 );

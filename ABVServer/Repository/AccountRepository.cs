@@ -3,6 +3,7 @@ using Entities;
 using Entities.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -13,17 +14,17 @@ namespace Repository
         {
         }
 
-        public Account GetAccountById(int accountId)
+        public async Task<Account> GetAccountById(int accountId)
         {
-            return FindByCondition(a => a.Id.Equals(accountId))
-                .FirstOrDefault();
+            return await FindByCondition(a => a.Id.Equals(accountId))
+                .FirstOrDefaultAsync();
         }
 
-        public Account GetAccountWithDetails(int accountId)
+        public async Task<Account> GetAccountWithDetails(int accountId)
         {
-            return FindByCondition(a => a.Id.Equals(accountId))
+            return await FindByCondition(a => a.Id.Equals(accountId))
                 .Include(a=>a.Transactions)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
     }
 }

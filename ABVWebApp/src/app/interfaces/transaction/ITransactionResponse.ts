@@ -1,8 +1,7 @@
 export interface TransactionResponse {
     id: number;
     addedDateTime: string;
-    year: number;
-    month: number;
+    transactionDate: string;
     amount: number;
     accountId: number;
 }

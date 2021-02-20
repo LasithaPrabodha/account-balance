@@ -1,6 +1,6 @@
 export interface AuthResponse {
     isAuthSuccessful: boolean;
-    errorMessage: string;
+    message: string;
     accessToken: string;
     refreshToken: string;
 }

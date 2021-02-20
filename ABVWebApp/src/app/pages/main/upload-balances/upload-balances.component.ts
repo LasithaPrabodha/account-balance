@@ -45,12 +45,10 @@ export class UploadBalancesComponent extends BaseComponent implements OnInit {
     }
 
     submitForm() {
-        if (this.form.valid) {
-            const date = new Date(this.form.value.yearMonth);
-            const [month, year] = [date.getMonth() + 1, date.getFullYear()];
+        if (this.form.valid && this.fileInput.nativeElement.files.length) {
+            const transactionDate = new Date(this.form.value.yearMonth);
             const request: UploadBalance = {
-                year,
-                month,
+                transactionDate: transactionDate.toUTCString(),
                 file: this.fileInput.nativeElement.files[0],
             };
             this.accountService
@@ -60,11 +58,12 @@ export class UploadBalancesComponent extends BaseComponent implements OnInit {
                     (result) => {
                         this.showSuccess = true;
                         this.responseMessage = result.message;
+                        this.fileInput.nativeElement.value = '';
                     },
                     (err) => {
                         this.showSuccess = false;
                         this.showError = true;
-                        this.responseMessage = err;
+                        this.responseMessage = err.message;
                     }
                 );
         }

@@ -36,7 +36,7 @@ namespace WebApi.Controllers
             {
 
                 if (userForRegistration == null || !ModelState.IsValid)
-                    return BadRequest();
+                    return BadRequest(ModelState);
 
                 User user = _mapper.Map<User>(userForRegistration);
 
@@ -66,7 +66,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 this._logger.LogError(e.Message);
-                return StatusCode(500, new { errMsg = e.Message });
+                return StatusCode(500, new Error { Message = e.Message });
             }
         }
 
@@ -94,7 +94,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 this._logger.LogError(e.Message);
-                return StatusCode(500, new { message = e.Message });
+                return StatusCode(500, new Error { Message = e.Message });
             }
         }
     }

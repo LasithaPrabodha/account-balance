@@ -41,8 +41,7 @@
                     <button
                         type="submit"
                         class="btn btn-info"
-                        [disabled]="!loginForm.valid"
-                        [attr.disabled]="isLoading || null"
+                        [attr.disabled]="isLoading || !loginForm.valid ? true : null"
                     >
                         Login
                     </button>

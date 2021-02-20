@@ -3,8 +3,8 @@ using Contracts;
 using Entities.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,31 +47,7 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(500, new { message = e.Message });
-            }
-        }
-
-
-
-        // GET api/<AccountController>/5
-        [HttpGet("{id}")]
-        [Authorize(Roles = "Administrator")]
-        public IActionResult GetAccount(int id)
-        {
-
-            try
-            {
-                Account account = _repository.Account.GetAccountWithDetails(id);
-
-                AccountWithDetailsDto accountDto = _mapper.Map<AccountWithDetailsDto>(account);
-
-                _logger.LogInfo("loaded account: " + id);
-                return Ok(accountDto);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return StatusCode(500, new { message = e.Message });
+                return StatusCode(500, new Error { Message = e.Message });
             }
         }
 
@@ -91,29 +67,52 @@ namespace WebApi.Controllers
                             string[] col = sreader.ReadLine().Split(',');
                             string accountName = col[0].ToString();
                             double amount = double.Parse(col[1].ToString());
-                            
-                            Account account = _repository.Account.FindByCondition(account => account.AccountName.Contains(accountName)).FirstOrDefault();
 
-                            Transaction transaction = new Transaction { AccountId = account.Id, Amount = amount, AddedDateTime = DateTime.Now, Month = uploadBalance.Month, Year = uploadBalance.Year };
-                            account.Balance += amount;
+                            Account account = await _repository.Account.FindByCondition(account => account.AccountName.Contains(accountName))
+                                                                    .FirstOrDefaultAsync();
 
-                            _repository.Transaction.Create(transaction);
-                            _repository.Account.Update(account);
-                            _logger.LogInfo("Transaction saved: " + transaction.Id);
+                            Transaction transaction = await _repository.Transaction.FindByCondition(transaction =>
+                                    transaction.TransactionDate.Date == DateTime.Parse(uploadBalance.TransactionDate) 
+                                    && transaction.AccountId == account.Id
+                                ).FirstOrDefaultAsync();
+
+                            if (transaction != null)
+                            {
+                                return BadRequest(new Error { Message = "Accounts were already updated for selected month." });
+                            }
+                            else
+                            {
+
+                                Transaction newTransaction = new Transaction
+                                {
+                                    AccountId = account.Id,
+                                    Amount = amount,
+                                    AddedDateTime = DateTime.Now,
+                                    TransactionDate = DateTime.Parse(uploadBalance.TransactionDate)
+                                };
+
+                                _repository.Transaction.Create(newTransaction);
+                              
+                                account.Balance += amount;
+                                _repository.Account.Update(account);
+                                
+                                _logger.LogInfo("Transaction saved: " + newTransaction.Id);
+                            }
                         }
-                        _repository.Save();
+                        await _repository.Save();
+
                     }
                     return Ok(new { message = "Account balance was updated successfully!" });
                 }
                 else
                 {
-                    return BadRequest(new { message = "Wrong file format" });
+                    return BadRequest(new Error { Message = "Wrong file format" });
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return StatusCode(500, new { message = e.Message });
+                return StatusCode(500, new Error { Message = e.Message });
             }
 
 

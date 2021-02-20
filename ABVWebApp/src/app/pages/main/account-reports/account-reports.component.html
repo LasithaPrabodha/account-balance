@@ -1,0 +1,69 @@
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="mb-4">Account Reports</h2>
+        <div *ngIf="showError" class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+        </div>
+        <form [formGroup]="dateRangeForm" autocomplete="off" novalidate (ngSubmit)="onSubmit()">
+            <div class="form-group row mt-4">
+                <div class="col-3">
+                    <div class="row">
+                        <label for="startMonth" class="col-form-label col-md-5 text-bold">
+                            Start month:
+                        </label>
+                        <div class="col-md-7">
+                            <input
+                                type="text"
+                                id="startMonth"
+                                autocomplete="off"
+                                class="form-control date"
+                                readonly
+                                name="startMonth"
+                                bsDatepicker
+                                formControlName="startDate"
+                                [minDate]="start.minDate"
+                                [maxDate]="start.maxDate"
+                                [bsConfig]="datepickerConfig"
+                                (onShown)="onOpenCalendar($event)"
+                                (bsValueChange)="onValueChange($event, 'start')"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <label for="endMonth" class="col-form-label col-md-5 text-bold">
+                            End month:
+                        </label>
+                        <div class="col-md-7">
+                            <input
+                                type="text"
+                                id="endMonth"
+                                autocomplete="off"
+                                class="form-control date"
+                                readonly
+                                name="endMonth"
+                                bsDatepicker
+                                formControlName="endDate"
+                                [minDate]="end.minDate"
+                                [maxDate]="end.maxDate"
+                                [bsConfig]="datepickerConfig"
+                                (onShown)="onOpenCalendar($event)"
+                                (bsValueChange)="onValueChange($event, 'end')"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button type="submit" class="btn btn-info">Apply</button>
+                </div>
+            </div>
+        </form>
+        <div *ngIf="showInfo" class="alert alert-info" role="alert">
+            {{ infoMessage }}
+        </div>
+        <ng-container *ngIf="accounts.length">
+            <app-report *ngFor="let account of accounts" [accountData]="account"></app-report>
+        </ng-container>
+    </div>
+</div>

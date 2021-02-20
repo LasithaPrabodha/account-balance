@@ -1,8 +1,11 @@
-<div class="row">
+<div class="row mt-5">
     <div class="col-12">
-        <h5 class="pt-4 text-secondary text-center" *ngIf="isLoading">Loading...</h5>
+        <h2 class="mb-4">Account Balances</h2>
     </div>
-    <div class="col-sm-4 pt-4" *ngFor="let account of accounts$ | async">
+    <div class="col-12">
+        <h5 class="text-secondary text-center" *ngIf="isLoading">Loading...</h5>
+    </div>
+    <div class="col-sm-4" *ngFor="let account of accounts$ | async">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">{{ account.accountName }}</h5>

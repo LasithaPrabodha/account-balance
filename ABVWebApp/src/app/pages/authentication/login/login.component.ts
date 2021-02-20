@@ -58,7 +58,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
                         this.isLoading = false;
                     },
                     (error) => {
-                        this.errorMessage = error;
+                        this.errorMessage = error.message;
                         this.showError = true;
                         this.isLoading = false;
                     }

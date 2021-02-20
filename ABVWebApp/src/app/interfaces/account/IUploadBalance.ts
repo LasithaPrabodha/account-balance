@@ -1,5 +1,4 @@
 export interface UploadBalance {
-    year: number;
-    month: number;
+    transactionDate: string;
     file: File;
 }

@@ -47,35 +47,35 @@ namespace Entities.Migrations
                             Id = 1,
                             AccountName = "Rnd",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(8523)
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(3353)
                         },
                         new
                         {
                             Id = 2,
                             AccountName = "Canteen",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9360)
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4160)
                         },
                         new
                         {
                             Id = 3,
                             AccountName = "CEO's Car",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9366)
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4165)
                         },
                         new
                         {
                             Id = 4,
                             AccountName = "Marketing",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9367)
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4166)
                         },
                         new
                         {
                             Id = 5,
                             AccountName = "Parking Fines",
                             Balance = 0.0,
-                            DateCreated = new DateTime(2021, 2, 19, 14, 17, 19, 423, DateTimeKind.Local).AddTicks(9368)
+                            DateCreated = new DateTime(2021, 2, 20, 15, 2, 36, 826, DateTimeKind.Local).AddTicks(4168)
                         });
                 });
 
@@ -97,11 +97,8 @@ namespace Entities.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("double");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -214,15 +211,15 @@ namespace Entities.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b893e6a-e11c-4136-9976-643d8f21d97c",
-                            ConcurrencyStamp = "f3aa9441-4297-40f4-9d8a-18c08d79975f",
+                            Id = "9dd229f4-3d84-4bb9-89b7-01a18f46e688",
+                            ConcurrencyStamp = "188b4924-abf2-46af-a01a-b17a7c33a2c0",
                             Name = "Viewer",
                             NormalizedName = "VIEWER"
                         },
                         new
                         {
-                            Id = "26fe728a-b1dc-4f12-a673-e8b607594943",
-                            ConcurrencyStamp = "3b66ef9e-b3ab-49e2-9ca8-014ad60990b5",
+                            Id = "21fbcf8e-a350-42d4-91ff-779cd169a86e",
+                            ConcurrencyStamp = "f2b82de5-880e-4285-b936-5a9f0bd12241",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

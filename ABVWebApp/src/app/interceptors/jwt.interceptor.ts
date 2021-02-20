@@ -23,14 +23,16 @@ export class JwtInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError(
                 (err): Observable<any> => {
-                    if (err instanceof HttpErrorResponse) {
-                        switch ((<HttpErrorResponse>err).status) {
+                    if (err instanceof HttpErrorResponse && !err.error) {
+                        switch (err.status) {
                             case 401:
                                 console.log('Token expired. Attempting refresh ...');
                                 return this.handleHttpResponseError(request, next);
+                            default:
+                                return throwError(err);
                         }
                     } else {
-                        return throwError(err.message);
+                        return throwError(err.error || err);
                     }
                 }
             )
@@ -50,7 +52,6 @@ export class JwtInterceptor implements HttpInterceptor {
 
             this.tokenSubject.next(null);
 
-            /// call the API to refresh the token
             return this.authService.getNewRefreshToken().pipe(
                 switchMap((tokenresponse: AuthResponse) => {
                     if (tokenresponse) {
@@ -63,7 +64,7 @@ export class JwtInterceptor implements HttpInterceptor {
                 }),
                 catchError((err) => {
                     this.authService.logout();
-                    return throwError(err.message);
+                    return throwError(err);
                 }),
                 finalize(() => {
                     this.isTokenRefreshing = false;
