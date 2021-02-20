@@ -51,13 +51,11 @@ namespace WebApi.Controllers
 
                 if (userForRegistration.Role == Roles.Administrator)
                 {
-
                     await _userManager.AddToRoleAsync(user, "Administrator");
                 }
                 else
                 {
                     await _userManager.AddToRoleAsync(user, "Viewer");
-
                 }
 
 
