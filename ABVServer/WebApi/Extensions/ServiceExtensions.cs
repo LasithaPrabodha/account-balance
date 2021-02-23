@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
+using System;
 
 namespace WebApi.Extensions
 {
@@ -36,11 +37,11 @@ namespace WebApi.Extensions
         {
             var connectionString = config["mysqlconnection:connectionString"];
             services.AddDbContext<RepositoryContext>(o => o.UseMySql(connectionString, MySqlServerVersion.LatestSupportedServerVersion, options => options.EnableRetryOnFailure()));
-        }
+        } 
 
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }

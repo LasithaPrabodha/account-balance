@@ -10,12 +10,12 @@ import { Observable } from 'rxjs';
 })
 export class MenuComponent implements OnInit {
     isUserAuthenticated$: Observable<boolean>;
-    username: string;
+    username$: Observable<string>;
     constructor(private authService: AuthenticationService, private router: Router) {}
 
     ngOnInit(): void {
         this.isUserAuthenticated$ = this.authService.authChanged;
-        this.username = this.authService.username;
+        this.username$ = this.authService.username;
     }
 
     logout(): void {

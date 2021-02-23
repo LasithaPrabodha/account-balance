@@ -1,12 +1,13 @@
+using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Contracts
 {
-    public interface IRepositoryWrapper
+    public interface IUnitOfWork
     {
         IAccountRepository Account { get; }
         ITransactionRepository Transaction { get; }
-        IUserRepository User { get; }
         Task Save();
     }
 }

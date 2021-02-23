@@ -42,11 +42,8 @@ namespace WebApi.Controllers
                 if (user == null || user.RefreshToken != tokenDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                     return BadRequest(new AuthResponseDto { IsAuthSuccessful = false, ErrorMessage = "Invalid client request" });
 
-                var signingCredentials = _tokenService.GetSigningCredentials();
-                var claims = await _tokenService.GetClaims(user);
-                var tokenOptions = _tokenService.GenerateTokenOptions(signingCredentials, claims);
-                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-
+                var token = await _tokenService.GetToken(user);
+             
                 user.RefreshToken = _tokenService.GenerateRefreshToken();
 
                 await _userManager.UpdateAsync(user);

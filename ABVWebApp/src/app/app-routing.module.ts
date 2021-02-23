@@ -19,7 +19,7 @@ const routes: Routes = [
     {
         path: 'upload-balances',
         loadChildren: () =>
-            import('./pages/main/upload-balances/upload-balances.module').then(
+            import('./pages/primary-pages/upload-balances/upload-balances.module').then(
                 (m) => m.UploadBalancesModule
             ),
         canActivate: [AdminGuard],
@@ -27,7 +27,7 @@ const routes: Routes = [
     {
         path: 'account-balances',
         loadChildren: () =>
-            import('./pages/main/account-balances/account-balances.module').then(
+            import('./pages/primary-pages/account-balances/account-balances.module').then(
                 (m) => m.AccountBalancesModule
             ),
         canActivate: [AuthGuard],
@@ -35,7 +35,7 @@ const routes: Routes = [
     {
         path: 'account-reports',
         loadChildren: () =>
-            import('./pages/main/account-reports/account-reports.module').then(
+            import('./pages/primary-pages/account-reports/account-reports.module').then(
                 (m) => m.AccountReportsModule
             ),
         canActivate: [AdminGuard],

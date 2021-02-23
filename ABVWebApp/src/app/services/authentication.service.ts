@@ -13,6 +13,9 @@ export class AuthenticationService {
     private authChange$ = new BehaviorSubject<boolean>(false);
     authChanged = this.authChange$.asObservable();
 
+    private username$ = new BehaviorSubject<string>('');
+    username = this.username$.asObservable();
+
     constructor(
         private http: HttpClient,
         private jwtHelper: JwtHelperService,
@@ -33,12 +36,17 @@ export class AuthenticationService {
                 localStorage.setItem('accessToken', token);
                 localStorage.setItem('refreshToken', refreshToken);
 
+                const decodedToken = this.jwtHelper.decodeToken(token);
+                const str =
+                    decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+                this.username$.next(str);
                 return response;
             })
         );
     }
 
     logout(): void {
+        this.username$.next('');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         this.sendAuthStateChangeNotification(false);
@@ -79,13 +87,7 @@ export class AuthenticationService {
         const token = localStorage.getItem('accessToken');
         const decodedToken = this.jwtHelper.decodeToken(token);
         const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-        console.log(role);
-        return role === 'Administrator';
-    }
 
-    get username(): string {
-        const token = localStorage.getItem('accessToken');
-        const decodedToken = this.jwtHelper.decodeToken(token);
-        return decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+        return role === 'Administrator';
     }
 }

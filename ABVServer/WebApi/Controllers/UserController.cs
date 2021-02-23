@@ -17,16 +17,45 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IMapper _mapper;
         private readonly ILoggerManager _logger;
         private readonly ITokenService _tokenService;
 
-        public UserController(UserManager<User> userManager, IMapper mapper, ILoggerManager logger, ITokenService tokenService)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager,IMapper mapper, ILoggerManager logger, ITokenService tokenService)
         {
             _userManager = userManager;
             _mapper = mapper;
             _logger = logger;
             _tokenService = tokenService;
+            _signInManager = signInManager;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
+        {
+            try
+            {
+                Microsoft.AspNetCore.Identity.SignInResult signInResult = await _signInManager.PasswordSignInAsync(userForAuthentication.Email, userForAuthentication.Password, false, false);
+
+                if (signInResult == null || !signInResult.Succeeded)
+                    return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
+
+                var user = await _userManager.FindByEmailAsync(userForAuthentication.Email);
+
+                string token = await _tokenService.GetToken(user);
+
+                user.RefreshToken = _tokenService.GenerateRefreshToken();
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+                await _userManager.UpdateAsync(user);
+
+                return Ok(new AuthResponseDto { IsAuthSuccessful = true, AccessToken = token, RefreshToken = user.RefreshToken });
+            }
+            catch (Exception e)
+            {
+                this._logger.LogError(e.Message);
+                return StatusCode(500, new Error { Message = e.Message });
+            }
         }
 
         [HttpPost("registration")]
@@ -46,7 +75,7 @@ namespace WebApi.Controllers
                 {
                     var errors = result.Errors.Select(e => e.Description);
 
-                    return BadRequest(new RegistrationResponseDto { Errors = errors });
+                    return BadRequest(new RegistrationResponseDto { Errors = errors.ToList() });
                 }
 
                 if (userForRegistration.Role == Roles.Administrator)
@@ -68,32 +97,5 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
-        {
-            try
-            {
-                var user = await _userManager.FindByNameAsync(userForAuthentication.Email);
-
-                if (user == null || !await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
-                    return Unauthorized(new AuthResponseDto { ErrorMessage = "Invalid Authentication" });
-
-                var signingCredentials = _tokenService.GetSigningCredentials();
-                var claims = await _tokenService.GetClaims(user);
-                var tokenOptions = _tokenService.GenerateTokenOptions(signingCredentials, claims);
-                var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-
-                user.RefreshToken = _tokenService.GenerateRefreshToken();
-                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
-                await _userManager.UpdateAsync(user);
-
-                return Ok(new AuthResponseDto { IsAuthSuccessful = true, AccessToken = token, RefreshToken = user.RefreshToken });
-            }
-            catch (Exception e)
-            {
-                this._logger.LogError(e.Message);
-                return StatusCode(500, new Error { Message = e.Message });
-            }
-        }
     }
 }

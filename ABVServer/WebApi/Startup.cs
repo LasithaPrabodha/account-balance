@@ -22,13 +22,16 @@ namespace WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
+            _env = env;
         }
 
-        public IConfiguration Configuration { get; }    
+        public IConfiguration Configuration { get; }
+
+        private readonly IWebHostEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,10 +41,12 @@ namespace WebApi
             {
                 builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
             }));
-            services.ConfigureIISIntegration();
 
+            services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
+
             services.ConfigureMySqlContext(Configuration);
+            
             services.ConfigureRepositoryWrapper();
             services.AddAutoMapper(typeof(Startup));
 
@@ -59,7 +64,8 @@ namespace WebApi
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            })
+            .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -76,7 +82,7 @@ namespace WebApi
 
             services.AddScoped<ITokenService, TokenService>();
 
-            services.AddControllers().AddNewtonsoftJson(options => 
+            services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });

@@ -26,7 +26,17 @@ namespace WebApi.JWT
             _userManager = userManager;
         }
 
-        public SigningCredentials GetSigningCredentials()
+        public async Task<string> GetToken(User user)
+        {
+            var signingCredentials = this.GetSigningCredentials();
+            var claims = await this.GetClaims(user);
+            var tokenOptions = this.GenerateTokenOptions(signingCredentials, claims);
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            return token;
+        }
+
+        private SigningCredentials GetSigningCredentials()
         {
             var key = Encoding.UTF8.GetBytes(_jwtSettings.GetSection("securityKey").Value);
             var secret = new SymmetricSecurityKey(key);
@@ -34,7 +44,7 @@ namespace WebApi.JWT
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        public async Task<List<Claim>> GetClaims(User user)
+        private async Task<List<Claim>> GetClaims(User user)
         {
             var claims = new List<Claim>
         {
@@ -50,7 +60,7 @@ namespace WebApi.JWT
             return claims;
         }
 
-        public JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var tokenOptions = new JwtSecurityToken(
                 issuer: _jwtSettings.GetSection("validIssuer").Value,

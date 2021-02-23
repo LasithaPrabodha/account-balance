@@ -19,7 +19,6 @@ namespace Entities
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
 
-
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
     }

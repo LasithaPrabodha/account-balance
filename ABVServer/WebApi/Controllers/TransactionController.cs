@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -17,13 +18,13 @@ namespace WebApi.Controllers
     {
 
         private readonly ILoggerManager _logger;
-        private readonly IRepositoryWrapper _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public TransactionController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public TransactionController(ILoggerManager logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _logger = logger;
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -34,10 +35,10 @@ namespace WebApi.Controllers
 
             try
             {
-                IEnumerable<Transaction> transactions = _repository.Transaction.FindAll();
+                IQueryable<Transaction> transactions = _unitOfWork.Transaction.FindAll();
                 _logger.LogInfo("loaded transactions");
 
-                IEnumerable<TransactionDto> transactionDtos = _mapper.Map<TransactionDto[]>(transactions);
+                List<TransactionDto> transactionDtos = _mapper.Map<List<TransactionDto>>(transactions);
 
                 return Ok(transactionDtos);
             }
@@ -54,13 +55,18 @@ namespace WebApi.Controllers
             DateTime _endDate = DateTime.Parse(endDate).Date;
             DateTime _startDate  = DateTime.Parse(startDate).Date;
 
+            if(_startDate > _endDate)
+            {
+                return BadRequest(new Error { Message = "Start date is greater than end date." });
+            }
+
             try
             {
-                IEnumerable<Transaction> transactions = _repository.Transaction.FindByCondition(transaction=>
+                IEnumerable<Transaction> transactions = _unitOfWork.Transaction.FindByCondition(transaction=>
                     transaction.TransactionDate.Date <= _endDate && transaction.TransactionDate.Date >= _startDate
                 );
 
-                IEnumerable<TransactionDto> transactionDtos = _mapper.Map<TransactionDto[]>(transactions);
+                List<TransactionDto> transactionDtos = _mapper.Map<List<TransactionDto>>(transactions);
                 _logger.LogInfo("loaded transaction");
                 return Ok(transactionDtos);
             }

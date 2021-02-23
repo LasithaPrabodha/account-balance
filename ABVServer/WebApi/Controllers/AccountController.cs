@@ -20,13 +20,13 @@ namespace WebApi.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-        private readonly IRepositoryWrapper _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AccountController(ILoggerManager logger, IRepositoryWrapper repository, IMapper mapper)
+        public AccountController(ILoggerManager logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _logger = logger;
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -37,10 +37,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                IEnumerable<Account> accounts = _repository.Account.FindAll();
+                IEnumerable<Account> accounts = _unitOfWork.Account.FindAll();
                 _logger.LogInfo("loaded accounts");
 
-                IEnumerable<AccountDto> accountDtos = _mapper.Map<AccountDto[]>(accounts);
+                List<AccountDto> accountDtos = _mapper.Map<List<AccountDto>>(accounts);
 
                 return Ok(accountDtos);
             }
@@ -58,56 +58,62 @@ namespace WebApi.Controllers
         {
             try
             {
-                if (uploadBalance.File.FileName.EndsWith(".csv"))
+
+                if (DateTime.TryParse(uploadBalance.TransactionDate, out DateTime transactionDate) == false)
                 {
-                    using (var sreader = new StreamReader(uploadBalance.File.OpenReadStream()))
-                    {
-                        while (!sreader.EndOfStream)
-                        {
-                            string[] col = sreader.ReadLine().Split(',');
-                            string accountName = col[0].ToString();
-                            double amount = double.Parse(col[1].ToString());
-
-                            Account account = await _repository.Account.FindByCondition(account => account.AccountName.Contains(accountName))
-                                                                    .FirstOrDefaultAsync();
-
-                            Transaction transaction = await _repository.Transaction.FindByCondition(transaction =>
-                                    transaction.TransactionDate.Date == DateTime.Parse(uploadBalance.TransactionDate) 
-                                    && transaction.AccountId == account.Id
-                                ).FirstOrDefaultAsync();
-
-                            if (transaction != null)
-                            {
-                                return BadRequest(new Error { Message = "Accounts were already updated for selected month." });
-                            }
-                            else
-                            {
-
-                                Transaction newTransaction = new Transaction
-                                {
-                                    AccountId = account.Id,
-                                    Amount = amount,
-                                    AddedDateTime = DateTime.Now,
-                                    TransactionDate = DateTime.Parse(uploadBalance.TransactionDate)
-                                };
-
-                                _repository.Transaction.Create(newTransaction);
-                              
-                                account.Balance += amount;
-                                _repository.Account.Update(account);
-                                
-                                _logger.LogInfo("Transaction saved: " + newTransaction.Id);
-                            }
-                        }
-                        await _repository.Save();
-
-                    }
-                    return Ok(new { message = "Account balance was updated successfully!" });
+                    return BadRequest(new Error { Message = "Invalid date" });
                 }
-                else
+
+                if (!uploadBalance.File.FileName.EndsWith(".csv"))
                 {
                     return BadRequest(new Error { Message = "Wrong file format" });
                 }
+
+                using (var sreader = new StreamReader(uploadBalance.File.OpenReadStream()))
+                {
+                    while (!sreader.EndOfStream)
+                    {
+                        string[] col = sreader.ReadLine().Split(',');
+                        string accountName = col[0].ToString();
+                        double amount = double.Parse(col[1].ToString());
+
+                        Account account = await _unitOfWork.Account.FindByCondition(account => account.AccountName.Contains(accountName))
+                                                                .FirstOrDefaultAsync();
+
+                        Transaction transaction = await _unitOfWork.Transaction.FindByCondition(transaction =>
+                                transaction.TransactionDate.Date == transactionDate
+                                && transaction.AccountId == account.Id
+                            ).FirstOrDefaultAsync();
+
+                        if (transaction != null)
+                        {
+                            return BadRequest(new Error { Message = "Accounts were already updated for selected month." });
+                        }
+                        else
+                        {
+
+                            Transaction newTransaction = new Transaction
+                            {
+                                AccountId = account.Id,
+                                Amount = amount,
+                                AddedDateTime = DateTime.Now,
+                                TransactionDate = transactionDate
+                            };
+
+                            _unitOfWork.Transaction.Create(newTransaction);
+
+                            account.Balance += amount;
+                            _unitOfWork.Account.Update(account);
+
+                            _logger.LogInfo("Transaction saved: " + newTransaction.Id);
+                        }
+                    }
+                    await _unitOfWork.Save();
+
+                }
+                return Ok(new { message = "Account balance was updated successfully!" });
+
+
             }
             catch (Exception e)
             {

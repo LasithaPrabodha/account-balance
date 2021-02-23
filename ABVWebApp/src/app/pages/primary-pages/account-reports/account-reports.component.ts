@@ -94,6 +94,7 @@ export class AccountReportsComponent extends BaseComponent implements OnInit {
                         this.showInfo = true;
                         this.infoMessage = 'No updates to display.';
                     } else {
+                        this.showInfo = false;
                         this.accounts = accounts.map((account) => ({
                             ...account,
                             transactions: transactions.filter(

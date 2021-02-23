@@ -20,7 +20,6 @@ function tokenGetter(): string {
 @NgModule({
     declarations: [AppComponent, HomeComponent, NotFoundComponent, ForbiddenComponent],
     imports: [
-        BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         HttpClientModule,
